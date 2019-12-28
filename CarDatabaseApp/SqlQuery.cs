@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Npgsql;
-
-namespace CarDatabaseApp
+namespace Carproject
 {
     class SqlQuery
-    {
+    { 
         // Connection to Database
         private const string HOST = "localhost";
         private const string USERNAME = "postgres";
@@ -33,87 +34,100 @@ namespace CarDatabaseApp
             connection.Open();
         }
 
-        // kyselyt alapuolella, kesken vielä!
-        public static void SearchCarByBrand()
+        // kyselyt alapuolella, HUOM! Haut toimii vain, kun isot ja pienet kirjaimet on kirjoitettu
+        // niinkuin ne on tauluihin syötetty. Esim BMW, ei toimi Bmw tms.
+
+        // etsitään autonmerkin perusteella
+        public static void SearchByBrand()
         {
             using (SearchByBrand = new NpgsqlCommand($"SELECT * FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
             {
                 SearchByBrand.Prepare();
-
+          
             }
         }
 
-        public static void SearchCarByBrandAndModel()
+        // etsitään autonmerkin ja mallin perusteella
+        public static void SearchByBrandAndModel()
         {
-            using (SearchByBrandAndModel = new NpgsqlCommand($"SELECT * FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (SearchByBrandAndModel = new NpgsqlCommand($"SELECT * FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta} AND model = {tähänkäyttäjänvalintavalikosta};", connection))
             {
                 SearchByBrandAndModel.Prepare();
-
+          
             }
         }
 
-        public static void SearchCarByBrandAndPrice()
+        // etsitään autonmerkin ja hinnan perusteella
+        public static void SearchByBrandAndPrice()
         {
-            using (SearchByBrandAndPrice = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (SearchByBrandAndPrice = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta} AND price = {tähänkäyttäjänvalintavalikosta};", connection))
             {
                 SearchByBrandAndPrice.Prepare();
-
+          
             }
         }
 
-        public static void SearchCarByBrandAndPower()
+        // tässä haetaan autonmerkkiä ja käyttövoimaa ja yhdistetään cars ja carpower taulut
+        public static void SearchByBrandAndPower()
         {
-            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT cars.brand, cars.model, cars.year, cars.id_carpower, cars.price, cars.id_colour, cars.type, cars.platenr, carpower.carpower FROM cars LEFT JOIN carpower ON cars.id_carpower = carpower.carpower_id WHERE cars.brand = {tahankayttajanvalintavalikosta} AND carpower.carpower = {tahankayttajanvalintavalikosta};", connection))
             {
                 SearchByBrandAndPower.Prepare();
-
+          
             }
         }
 
-        public static void SearchCarByBrandAndColour()
+        // tässä haetaan autonmerkkiä ja väriä ja yhdistetään cars ja colour taulut
+        public static void SearchByBrandAndColour()
         {
-            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (SearchByBrandAndColour = new NpgsqlCommand($"SELECT cars.brand, cars.model, cars.year, cars.id_carpower, cars.price, cars.id_colour, cars.type, cars.platenr, colour.colour FROM cars LEFT JOIN colour ON cars.id_colour = colour.colour_id WHERE cars.brand = {tahankayttajanvalintavalikosta} AND colour.colour = {tahankayttajanvalintavalikosta};", connection))            
             {
-                SearchByBrandAndPower.Prepare();
-
+                SearchByBrandAndColour.Prepare();
+          
             }
         }
 
-
-        public static void SearchCarByPrice()
+        // etsitään hinnan perusteella
+        public static void SearchByPrice()
         {
-            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (SearchByPrice = new NpgsqlCommand($"SELECT * FROM cars WHERE price = {tähänkäyttäjänvalintavalikosta};", connection))
             {
-                SearchByBrandAndPower.Prepare();
-
+                SearchByPrice.Prepare();
+          
             }
         }
 
-        public static void SearchCarByPower()
+        // etsitään käyttövoiman perusteella, yhdistetään cars ja carpower taulut
+        public static void SearchByPower()
         {
-            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (SearchByPower = new NpgsqlCommand($"SELECT cars.brand, cars.model, cars.year, cars.id_carpower, cars.price, cars.id_colour, cars.type, cars.platenr, carpower.carpower FROM cars LEFT JOIN carpower ON cars.id_carpower = carpower.carpower_id WHERE carpower.carpower = {tahankayttajanvalintavalikosta};    ", connection))
             {
-                SearchByBrandAndPower.Prepare();
-
+                SearchByPower.Prepare();
+          
             }
         }
 
-        public static void AddCarToDb()
+
+        // ei vielä mitään hajua mitä näihin pitää laittaa?!
+        public static void AddCar()
         {
-            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (AddCar = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
             {
-                SearchByBrandAndPower.Prepare();
-
+                AddCar.Prepare();
+          
             }
         }
 
-        public static void DeleteCarFromDb()
+        public static void DeleteCar()
         {
-            using (SearchByBrandAndPower = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
+            using (DeleteCar = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta};", connection))
             {
-                SearchByBrandAndPower.Prepare();
-
+                DeleteCar.Prepare();
+          
             }
         }
+
+
     }
 }
+

@@ -50,7 +50,7 @@ namespace CarDatabaseApp
                 }
                 else if(i == LettersInPlateNumber)
                 {
-                    if (PlateNumber[i] != LettersInPlateNumber)
+                    if (PlateNumber[i] != PlateNumberSeparator)
                     {
                         returnValue = false;
                     }

@@ -8,6 +8,7 @@ namespace Carproject
 {
     class SqlQuery
     { 
+        /*
         // Connection to Database
         private const string HOST = "localhost";
         private const string USERNAME = "postgres";
@@ -127,7 +128,7 @@ namespace Carproject
             }
         }
 
-
+    */
     }
 }
 

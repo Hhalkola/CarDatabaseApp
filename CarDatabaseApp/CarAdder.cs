@@ -13,14 +13,16 @@ namespace CarDatabaseApp
             string carBrand;
             Console.WriteLine("Give brand: ");
             carBrand = Console.ReadLine();
-
-            //WIP
-            FirstLetterToUpperCase(carBrand);
-        }
+            carBrand = FirstLetterToUpperCase(carBrand);
+            return carBrand;
+        }        
         public static string CarModel()
         {
+            string carModel;
             Console.WriteLine("Car model: ");
-            return Console.ReadLine();
+            carModel = Console.ReadLine();
+            carModel = FirstLetterToUpperCase(carModel);
+            return carModel;
         }
         public static int CarYear()
         {
@@ -96,8 +98,11 @@ namespace CarDatabaseApp
         }
         public static string CarColor()
         {
+            string carColor;
             Console.WriteLine("Give color: ");
-            return Console.ReadLine();
+            carColor = Console.ReadLine();
+            carColor = FirstLetterToUpperCase(carColor);
+            return carColor;
         }
 
         public static string  CarPlateNumber()
@@ -134,10 +139,11 @@ namespace CarDatabaseApp
                 }
             }
         }
-        //WIP
+        //Method to convert first letter of string to Upper letter, rest of the string remains lowercase
         public static string FirstLetterToUpperCase(string input)
         {
-            return char.ToUpper(input[0]) + input.Substring(1);
+            input = input[0].ToString().ToUpper() + input.Substring(1);
+            return input.ToString();
         }
     }
 }

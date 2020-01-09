@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CarDatabaseApp
 {
-    class Car
+    class Car : IComparable
     {
         public int Id { get; set; }
         public string Brand { get; set; }
@@ -26,6 +26,11 @@ namespace CarDatabaseApp
             this.Color = color;
             this.Type = type;
             this.PlateNumber = plateNumber;
+        }
+
+        public int CompareTo(object obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

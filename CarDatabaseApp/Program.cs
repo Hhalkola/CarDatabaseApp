@@ -44,6 +44,10 @@ namespace CarDatabaseApp
 
                 //Delete Car
                 case 3:
+                    foreach (var item in carsDictionary)
+                    {
+                        Console.WriteLine(item.Key);
+                    }
                     break;
             }
         }

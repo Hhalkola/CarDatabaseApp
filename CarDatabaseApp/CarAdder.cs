@@ -10,6 +10,7 @@ namespace CarDatabaseApp
     {
         public static string CarBrand()
         {
+            //Fixed
             string carBrand;
             Console.WriteLine("Give brand: ");
             carBrand = Console.ReadLine();

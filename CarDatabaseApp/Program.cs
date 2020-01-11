@@ -29,6 +29,8 @@ namespace CarDatabaseApp
                     double price = CarAdder.CarPrice();
                     string color = CarAdder.CarColor();
 
+                    //If specific car exists in the database with same platenumber, we print specific error message on screen
+                    //Else we add car to the Dictionary and to the database
                     if (carsDictionary.ContainsKey(platenumber))
                     {
                         Console.WriteLine("Car with specific plate number already exists");

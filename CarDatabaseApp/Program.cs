@@ -37,11 +37,17 @@ namespace CarDatabaseApp
                     }
                     else
                     {
+                        //Add to dictionary
                         carsDictionary.Add(platenumber, carbrand + " " + carmodel + " " + caryear + " " + fueltype + " " + price + " " + color);
+                        //Create new instance
+                        Car car = new Car(platenumber, carbrand, carmodel, caryear, fueltype, price, color);
+                        //Add to the database
+                        SqlQuery.AddCarToTheDb(car);
                     }
                     break;
                 //Search Car
                 case 2:
+                    CarSearcher.CarSearchMenu();
                     break;
 
                 //Delete Car

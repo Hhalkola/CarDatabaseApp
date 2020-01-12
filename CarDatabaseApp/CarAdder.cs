@@ -139,6 +139,7 @@ namespace CarDatabaseApp
                 }
             }
         }
+        //We use this method to convert strings so they always have first letter in capital and rest lower case
         public static string FirstLetterToUpperCase(string input)
         {
             input = input[0].ToString().ToUpper() + input.Substring(1);

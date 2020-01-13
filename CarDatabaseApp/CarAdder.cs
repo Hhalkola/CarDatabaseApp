@@ -112,7 +112,7 @@ namespace CarDatabaseApp
             //Then next 3 must be numbers from 0-9
             //We convert user input to Uppercase to make method more flexible
             Regex regex = new Regex("^[A-Z]{3}[0-9]{3}$");
-            string userInput ="";
+            string userInput;
             string userInputToUpper = "";
 
             while (true)

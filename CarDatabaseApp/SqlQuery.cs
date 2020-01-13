@@ -17,13 +17,14 @@ namespace CarDatabaseApp
         private const string DB = "Cars";
         private const string CONNECTION_STRING = "Host=" + HOST + ";Username=" + USERNAME + ";Password=" + PASSWORD + ";Database=" + DB;
 
-        static private NpgsqlCommand GetAllCars = null;
+        
         static private NpgsqlCommand SearchByBrandAndPrice = null;
         static private NpgsqlCommand SearchByBrandAndPower = null;
         static private NpgsqlCommand SearchByBrandAndColour = null;
-        static private NpgsqlCommand SearchByPrice = null;
         static private NpgsqlCommand SearchByPower = null;
         */
+        static private NpgsqlCommand getAllCars = null;
+        static private NpgsqlCommand searchByPrice = null;
         static private NpgsqlCommand searchCarBrandAndModel = null;
         static private NpgsqlCommand deleteCar = null;
         static private NpgsqlCommand searchCarByBrand = null;
@@ -38,13 +39,26 @@ namespace CarDatabaseApp
             connection.Open();
         }
 
-        // kyselyt alapuolella, HUOM! Haut toimii vain, kun isot ja pienet kirjaimet on kirjoitettu
-        // niinkuin ne on tauluihin syötetty. Esim BMW, ei toimi Bmw tms.
         */
+        public static void GetAllCarsFromDb()
+        {
+            //WIP
+            using (getAllCars = new NpgsqlCommand($"SELECT * FROM cars;", connection))
+            {
+                getAllCars.Prepare();
+                using (NpgsqlDataReader reader = getAllCars.ExecuteReader())
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($" {reader.GetInt16(0)}, {reader.GetString(1)}, {reader.GetString(2)}, {reader.GetString(3)}, {reader.GetInt16(4)}, {reader.GetInt16(5)},{ reader.GetDouble(6)}, { reader.GetString(7)}");
+                    }
+            }
+        }
+
         public static void SearchByCarBrand()
         {
             Console.WriteLine("What brand cars you want to search?" );
             string brandToSearch = Console.ReadLine();
+            brandToSearch = CarAdder.FirstLetterToUpperCase(brandToSearch);
             using (searchCarByBrand = new NpgsqlCommand($"SELECT * FROM cars WHERE brand = {brandToSearch};", connection))
             {
                 searchCarByBrand.Prepare();
@@ -56,8 +70,7 @@ namespace CarDatabaseApp
             }
         }
         
-        // etsitään autonmerkin ja mallin perusteella
-        
+        // etsitään autonmerkin ja mallin perusteella 
         public static void SearchByBrandAndModel()
         {
             //Ask the brand
@@ -88,7 +101,7 @@ namespace CarDatabaseApp
             }
         }
         /*
-        // etsitään autonmerkin ja hinnan perusteella
+        // Search according to brand and price
         public static void SearchByBrandAndPrice()
         {
             using (SearchByBrandAndPrice = new NpgsqlCommand($"SELECT brand FROM cars WHERE brand = {tähänkäyttäjänvalintavalikosta} AND price = {tähänkäyttäjänvalintavalikosta};", connection))
@@ -118,16 +131,51 @@ namespace CarDatabaseApp
             }
         }
 
-        // etsitään hinnan perusteella
-        public static void SearchByPrice()
+        // Search by specific budget
+        */
+        public static void SearchCarByPrice()
         {
-            using (SearchByPrice = new NpgsqlCommand($"SELECT * FROM cars WHERE price = {tähänkäyttäjänvalintavalikosta};", connection))
+            double budget =0;
+            Console.WriteLine("What is your budget? ");
+            
+            while (true)
             {
-                SearchByPrice.Prepare();
-          
+                try
+                {
+                    budget = double.Parse(Console.ReadLine());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    break;
+                }
+            }
+            
+            //WIP
+            using (searchByPrice = new NpgsqlCommand($"SELECT * FROM cars WHERE price < {budget};", connection))
+            {
+                searchByPrice.Prepare();
+                try
+                {
+                    using (NpgsqlDataReader reader = searchByPrice.ExecuteReader())
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($" {reader.GetInt16(0)}, {reader.GetString(1)}, {reader.GetString(2)}, {reader.GetString(3)}, {reader.GetInt16(4)}, {reader.GetInt16(5)},{ reader.GetDouble(6)}, { reader.GetString(7)}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
             }
         }
-
+        /*
         // etsitään käyttövoiman perusteella, yhdistetään cars ja carpower taulut
         public static void SearchByPower()
         {
@@ -193,8 +241,6 @@ namespace CarDatabaseApp
           
             }
         }
-
-    
     }
 }
 

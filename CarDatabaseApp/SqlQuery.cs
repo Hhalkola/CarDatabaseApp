@@ -9,7 +9,7 @@ namespace CarDatabaseApp
 {
     class SqlQuery
     {
-        /*
+        
         // Connection to Database
         private const string HOST = "localhost";
         private const string USERNAME = "postgres";
@@ -22,7 +22,7 @@ namespace CarDatabaseApp
         static private NpgsqlCommand SearchByBrandAndPower = null;
         static private NpgsqlCommand SearchByBrandAndColour = null;
         static private NpgsqlCommand SearchByPower = null;
-        */
+        
         static private NpgsqlCommand getAllCars = null;
         static private NpgsqlCommand searchByPrice = null;
         static private NpgsqlCommand searchCarBrandAndModel = null;
@@ -30,7 +30,7 @@ namespace CarDatabaseApp
         static private NpgsqlCommand searchCarByBrand = null;
         static private NpgsqlConnection connection;
         static private NpgsqlCommand addCar = null;
-/*
+
 
         //Connecting to database
         public static void Connection()
@@ -38,11 +38,11 @@ namespace CarDatabaseApp
             connection = new NpgsqlConnection(CONNECTION_STRING);
             connection.Open();
         }
-
-        */
+        
         public static void GetAllCarsFromDb()
         {
             //WIP
+            connection.Open();
             using (getAllCars = new NpgsqlCommand($"SELECT * FROM cars;", connection))
             {
                 getAllCars.Prepare();
@@ -59,6 +59,7 @@ namespace CarDatabaseApp
             Console.WriteLine("What brand cars you want to search?" );
             string brandToSearch = Console.ReadLine();
             brandToSearch = CarAdder.FirstLetterToUpperCase(brandToSearch);
+            connection.Open();
             using (searchCarByBrand = new NpgsqlCommand($"SELECT * FROM cars WHERE brand = {brandToSearch};", connection))
             {
                 searchCarByBrand.Prepare();
@@ -81,6 +82,7 @@ namespace CarDatabaseApp
             Console.WriteLine("What model you want to search? ");
             string modelToSearch = Console.ReadLine();
             modelToSearch = CarAdder.FirstLetterToUpperCase(modelToSearch);
+            connection.Open();
 
             using (searchCarBrandAndModel = new NpgsqlCommand($"SELECT * FROM cars WHERE brand = {brandToSearch} AND model = {modelToSearch};", connection))
             {
@@ -150,7 +152,7 @@ namespace CarDatabaseApp
                     break;
                 }
             }
-            
+            connection.Open();
             //WIP
             using (searchByPrice = new NpgsqlCommand($"SELECT * FROM cars WHERE price < {budget};", connection))
             {
@@ -188,6 +190,7 @@ namespace CarDatabaseApp
         */
         public static void AddCarToTheDb(Car car)
         {
+            connection.Open();
             using (addCar = new NpgsqlCommand("INSERT INTO car(platenumber, brand, model, year, fuelid, price, colorid)"
                 + "VALUES (@platenumber, @brand, @model, @year, @fuelid, @price, @colorid)", connection))
             {
@@ -220,6 +223,7 @@ namespace CarDatabaseApp
             //Print list of cars -> Ask which one to delete
             Console.WriteLine("Which car do you want to remove?" );
             string carToDelete = Console.ReadLine();
+            connection.Open();
 
             using (deleteCar = new NpgsqlCommand($"DELETE FROM cars WHERE id = {carToDelete};", connection))
             {

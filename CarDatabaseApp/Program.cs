@@ -15,6 +15,7 @@ namespace CarDatabaseApp
             Console.WriteLine("What do you want to do?" );
             Console.WriteLine("1 - Add car");
             Console.WriteLine("2 - Search car");
+            Console.WriteLine("3 - Delete car");
             int input = int.Parse(Console.ReadLine());
 
             switch (input)
@@ -27,10 +28,11 @@ namespace CarDatabaseApp
                     int caryear = CarAdder.CarYear();
                     int fueltype = CarAdder.FuelType();
                     double price = CarAdder.CarPrice();
-                    string color = CarAdder.CarColor();
+                    int color = CarAdder.CarColor();
 
                     //If specific car exists in the database with same platenumber, we print specific error message on screen
                     //Else we add car to the Dictionary and to the database
+                    //This is just an example which doesnt work properly as program is closed/opened again, dictionary is empty, but this is example how we could use dictionary here
                     if (carsDictionary.ContainsKey(platenumber))
                     {
                         Console.WriteLine("Car with specific plate number already exists");
@@ -42,6 +44,7 @@ namespace CarDatabaseApp
                         //Create new instance
                         Car car = new Car(platenumber, carbrand, carmodel, caryear, fueltype, price, color);
                         //Add to the database
+                        SqlQuery.Connection();
                         SqlQuery.AddCarToTheDb(car);
                     }
                     break;
@@ -52,10 +55,8 @@ namespace CarDatabaseApp
 
                 //Delete Car
                 case 3:
-                    foreach (var item in carsDictionary)
-                    {
-                        Console.WriteLine(item.Key);
-                    }
+                    SqlQuery.Connection();
+                    SqlQuery.DeleteCar();
                     break;
             }
         }

@@ -48,7 +48,7 @@ namespace CarDatabaseApp
         }
         public static int FuelType()
         {
-            string[] fueltypes = new string[] { "1- Gasoline", "2 - Diesel", "3 - Hybrid" };
+            string[] fueltypes = new string[] { "1- Gasoline", "2 - Diesel"};
             int fueltype =0;
 
             while (true)
@@ -96,12 +96,11 @@ namespace CarDatabaseApp
                 }
             }
         }
-        public static string CarColor()
+        public static int CarColor()
         {
-            string carColor;
+            int carColor;
             Console.WriteLine("Give color: ");
-            carColor = Console.ReadLine();
-            carColor = FirstLetterToUpperCase(carColor);
+            carColor = int.Parse(Console.ReadLine());
             return carColor;
         }
 

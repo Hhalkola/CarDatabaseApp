@@ -9,7 +9,6 @@ namespace CarDatabaseApp
 {
     class SqlQuery
     {
-        public static List<Car> GetCars { get; set; } = new List<Car>();
 
         // Connection to Database
         private const string HOST = "localhost";
@@ -18,10 +17,6 @@ namespace CarDatabaseApp
         private const string DB = "cars";
         private const string CONNECTION_STRING = "Host=" + HOST + ";Username=" + USERNAME + ";Password=" + PASSWORD + ";Database=" + DB;
 
-        
-        static private NpgsqlCommand SearchByBrandAndPrice = null;
-        static private NpgsqlCommand SearchByBrandAndPower = null;
-        
         static private NpgsqlCommand getAllCars = null;
         static private NpgsqlCommand searchByPrice = null;
         static private NpgsqlCommand searchCarBrandAndModel = null;
@@ -38,19 +33,26 @@ namespace CarDatabaseApp
             connection = new NpgsqlConnection(CONNECTION_STRING);
             connection.Open();
         }
-        
+
+        //Get all cars from the DB and print on screen
         public static void GetAllCarsFromDb()
         {
-            //WIP
-            connection.Open();
-            using (getAllCars = new NpgsqlCommand($"SELECT * FROM cars;", connection))
+            using (getAllCars = new NpgsqlCommand($"SELECT cars.platenumber, cars.brand, cars.model, cars.year, cars.price, fuel.carpower, colour.colour FROM cars LEFT JOIN colour on colour.colour_id = cars.colorid LEFT JOIN fuel on fuel.fuelid = cars.fuelid;", connection))
             {
-                getAllCars.Prepare();
-                using (NpgsqlDataReader reader = getAllCars.ExecuteReader())
-                    while (reader.Read())
-                    {
-                        Console.WriteLine($" {reader.GetInt16(0)}, {reader.GetString(1)}, {reader.GetString(2)}, {reader.GetString(3)}, {reader.GetInt16(4)}, {reader.GetInt16(5)},{ reader.GetDouble(6)}, { reader.GetString(7)}");
-                    }
+                try
+                {
+                    getAllCars.Prepare();
+                    using (NpgsqlDataReader dataReader = getAllCars.ExecuteReader())
+                        while (dataReader.Read())
+                        {
+                            Console.WriteLine($" {dataReader.GetString(0)}, {dataReader.GetString(1)}, {dataReader.GetString(2)}, {dataReader.GetInt16(3)}, {dataReader.GetInt16(4)}, {dataReader.GetString(5)}, { dataReader.GetString(6)}");
+                        }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
             }
         }
 
@@ -69,10 +71,10 @@ namespace CarDatabaseApp
                 {
                     //Print on screen
                     using (NpgsqlDataReader dataReader = searchCarByBrand.ExecuteReader())
-                        while (dataReader.Read())
-                        {
-                            Console.WriteLine($" {dataReader.GetString(0)}, {dataReader.GetString(1)}, {dataReader.GetString(2)}, {dataReader.GetInt16(3)}, {dataReader.GetInt16(4)}, {dataReader.GetString(5)}, { dataReader.GetString(6)}");
-                        }
+                    while (dataReader.Read())
+                    {
+                        Console.WriteLine($" {dataReader.GetString(0)}, {dataReader.GetString(1)}, {dataReader.GetString(2)}, {dataReader.GetInt16(3)}, {dataReader.GetInt16(4)}, {dataReader.GetString(5)}, { dataReader.GetString(6)}");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -95,7 +97,7 @@ namespace CarDatabaseApp
             //Ask the model
             Console.WriteLine("What model you want to search? ");
             string modelToSearch = Console.ReadLine();
-            modelToSearch = CarAdder.FirstLetterToUpperCase(modelToSearch);
+            modelToSearch = modelToSearch.ToUpper();
             
             using (searchCarBrandAndModel = new NpgsqlCommand($"SELECT cars.platenumber, cars.brand, cars.model, cars.year, cars.price, fuel.carpower, colour.colour FROM cars LEFT JOIN colour on colour.colour_id = cars.colorid LEFT JOIN fuel on fuel.fuelid = cars.fuelid WHERE cars.brand = '{brandToSearch}' AND cars.model = '{modelToSearch}'", connection))
             {
@@ -121,6 +123,7 @@ namespace CarDatabaseApp
         }
         public static void SearchCarByFuelType()
         {
+            //Ask the fuel type user wants to search
             Console.WriteLine("What fuel type you are looking for? ");
             string[] fueltypes = new string[] { "1- Gasoline", "2 - Diesel"};
 
@@ -129,7 +132,7 @@ namespace CarDatabaseApp
                 Console.WriteLine(item);
             }
             int fueltypetoseach = int.Parse(Console.ReadLine());
-
+            //Execute the query to the db and print results
             using (searchByFuelType = new NpgsqlCommand($"SELECT cars.platenumber, cars.brand, cars.model, cars.year, cars.price, fuel.carpower, colour.colour FROM cars LEFT JOIN colour on colour.colour_id = cars.colorid LEFT JOIN fuel on fuel.fuelid = cars.fuelid WHERE cars.fuelid = {fueltypetoseach}", connection))
             {
                 searchByFuelType.Prepare();
@@ -151,16 +154,15 @@ namespace CarDatabaseApp
                     connection.Dispose();                    
                 }
             }
-
-
         }
 
         public static void SearchCarByPrice()
         {
             double budget;
+            //Ask the budget from the user
             Console.WriteLine("What is your budget? ");
             budget = double.Parse(Console.ReadLine());
-
+            //Execute the query to the db and print results
             using (searchByPrice = new NpgsqlCommand($"SELECT cars.platenumber, cars.brand, cars.model, cars.year, cars.price, fuel.carpower, colour.colour FROM cars LEFT JOIN colour on colour.colour_id = cars.colorid LEFT JOIN fuel on fuel.fuelid = cars.fuelid WHERE cars.price < {budget}", connection))
             {
                 searchByPrice.Prepare();
@@ -170,13 +172,7 @@ namespace CarDatabaseApp
 
                     while (dataReader.Read())
                     {
-                            GetCars.Add(new Car(dataReader.GetString(0), dataReader.GetString(1), dataReader.GetString(2), dataReader.GetInt16(3), dataReader.GetInt16(4),  double.Parse(dataReader.GetString(5)), dataReader.GetInt16(6)));
-
-                            foreach (var item in GetCars)
-                            {
-                                Console.WriteLine(item.PlateNumber , item.Brand , item.Price , item.Model , item.Year , item.Power , item.Color);
-                            }
-                        //Console.WriteLine($" {dataReader.GetString(0)}, {dataReader.GetString(1)}, {dataReader.GetString(2)}, {dataReader.GetInt16(3)}, {dataReader.GetInt16(4)}, {dataReader.GetString(5)}, { dataReader.GetString(6)}");
+                        Console.WriteLine($" {dataReader.GetString(0)}, {dataReader.GetString(1)}, {dataReader.GetString(2)}, {dataReader.GetInt16(3)}, {dataReader.GetInt16(4)}, {dataReader.GetString(5)}, { dataReader.GetString(6)}");
                     }
                 }
                 catch (Exception ex)
@@ -190,17 +186,6 @@ namespace CarDatabaseApp
                 }
             }
         }
-        /*
-        // etsitään käyttövoiman perusteella, yhdistetään cars ja carpower taulut
-        public static void SearchByPower()
-        {
-            using (SearchByPower = new NpgsqlCommand($"SELECT cars.brand, cars.model, cars.year, cars.id_carpower, cars.price, cars.id_colour, cars.type, cars.platenr, carpower.carpower FROM cars LEFT JOIN carpower ON cars.id_carpower = carpower.carpower_id WHERE carpower.carpower = {tahankayttajanvalintavalikosta};    ", connection))
-            {
-                SearchByPower.Prepare();
-          
-            }
-        }
-        */
         public static void AddCarToTheDb(Car car)
         {
             using (addCar = new NpgsqlCommand("INSERT INTO cars(platenumber, brand, model, year, fuelid, price, colorid)"
@@ -218,9 +203,10 @@ namespace CarDatabaseApp
                 {
                     addCar.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("Car with this platenumber already exists in the database");
+
                 }
                 finally
                 {
@@ -234,8 +220,7 @@ namespace CarDatabaseApp
         {
             //Ask platenumber of the car which user wants to delete
             string carToDelete = CarAdder.CarPlateNumber();
-            
-
+            //Execute the query with the user input
             using (deleteCar = new NpgsqlCommand($"DELETE FROM cars WHERE platenumber = '{carToDelete}';", connection))
             {
                 deleteCar.Prepare();

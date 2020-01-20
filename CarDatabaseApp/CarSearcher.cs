@@ -13,6 +13,8 @@ namespace CarDatabaseApp
             Console.WriteLine("2 - Brand & model");
             Console.WriteLine("3 - Price");
             Console.WriteLine("4 - Fuel type");
+            Console.WriteLine("5 - All cars");
+            Console.WriteLine("6 - Quit");
             int searchCriteria = int.Parse(Console.ReadLine());
 
             switch (searchCriteria)
@@ -33,7 +35,13 @@ namespace CarDatabaseApp
                     SqlQuery.Connection();
                     SqlQuery.SearchCarByFuelType();
                     break;
-
+                case 5:
+                    SqlQuery.Connection();
+                    SqlQuery.GetAllCarsFromDb();
+                    break;
+                case 6:
+                    Environment.Exit(1);
+                    break;
             }
         }
     }

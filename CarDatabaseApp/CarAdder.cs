@@ -32,6 +32,7 @@ namespace CarDatabaseApp
                 while (true)
                 {
                     Console.WriteLine("Year of manufacturing: ");
+                    Console.WriteLine("Smallest possible value is 1900");
                     try
                     {
                         year = int.Parse(Console.ReadLine());
@@ -66,7 +67,7 @@ namespace CarDatabaseApp
                 }
                 catch (FormatException ex)
                 {
-                    Console.WriteLine(ex);
+                    Console.WriteLine(ex.Message);
                 }
                 if (fueltype >= 1 && fueltype <= fueltypes.Length)
                 {
@@ -75,16 +76,17 @@ namespace CarDatabaseApp
                 
             }
         }
-        public static double CarPrice()
+        public static int CarPrice()
         {
             while (true)
             {
-                double carprice = 0;
-                double minimumprice = 50;
+                int carprice = 0;
+                int minimumprice = 50;
                 Console.WriteLine("Give price: ");
+                Console.WriteLine("Minimum price is 50");
                 try
                 {
-                    carprice = double.Parse(Console.ReadLine());
+                    carprice = int.Parse(Console.ReadLine());
                 }
                 catch (Exception ex)
                 {
@@ -98,10 +100,28 @@ namespace CarDatabaseApp
         }
         public static int CarColor()
         {
-            int carColor;
-            Console.WriteLine("Give color: ");
-            carColor = int.Parse(Console.ReadLine());
-            return carColor;
+            while (true)
+            {
+                string[] colors = new string[] { "1 - Black", "2 - Red", "3 - Blue", "4 - Yellow", "5 - Grey", "6 - White" };
+                int carColor =0;
+                Console.WriteLine("Give color: ");
+                foreach (var item in colors)
+                {
+                    Console.WriteLine(item);
+                }
+                try
+                {
+                    carColor = int.Parse(Console.ReadLine());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                if (carColor >= 1 && carColor <= colors.Length)
+                {
+                    return carColor;
+                }               
+            }
         }
 
         public static string  CarPlateNumber()
@@ -144,17 +164,5 @@ namespace CarDatabaseApp
             input = input[0].ToString().ToUpper() + input.Substring(1);
             return input.ToString();
         }
-
-        public static void ContinueOrEnd()
-        {
-            Console.WriteLine("Do you want to quit the program?");
-            char endOrNot = char.Parse(Console.ReadLine());
-
-            if (endOrNot == 'y' || endOrNot == 'Y')
-            {
-
-            }
-        }
-
     }
 }
